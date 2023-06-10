@@ -1,0 +1,6 @@
+# Don't ignore the build setup batch file
+/build/*
+!/build/configure.bat
+
+test_shader.*
+*.shaders

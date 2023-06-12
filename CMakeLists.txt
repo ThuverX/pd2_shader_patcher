@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.0)
 
 # This is the name of the resulting library, without
 # the .dll (Windows) or .so (GNU+Linux)
-set(plugin_name my_plugin) # PLEASE EDIT ME!
+set(plugin_name shader_tool)
 
 # This is the project name, often shown in IDEs
 # On Windows, this is the filename of the Visual Studio project
-project(PluginTemplate)
+project(ShaderTool)
 
 # Use CXX 14
 set(CMAKE_CXX_STANDARD 14)
@@ -30,13 +30,11 @@ target_link_libraries(${plugin_name} sblt_plugin)
 # The mod the DLL will be copied into a mod folder whenever
 # you compile the project
 
-# eg mymod copies it to mods/mymod/<the plugin name>.dll
-set(target_mod_name mymod)
+set(target_mod_name ShaderPatcher)
 
-# Uncooment this to enable it
-#add_custom_command(
-#	TARGET ${plugin_name}
-#	POST_BUILD
-#	COMMAND powershell -command copy \\\"$<TARGET_FILE:${plugin_name}>\\\" \\\"C:/Program Files \(x86\)/Steam/steamapps/common/PAYDAY 2/mods/${target_mod_name}/${plugin_name}.dll\\\"
-#)
+add_custom_command(
+	TARGET ${plugin_name}
+	POST_BUILD
+	COMMAND powershell -command copy \\\"$<TARGET_FILE:${plugin_name}>\\\" \\\"C:/Program Files \(x86\)/Steam/steamapps/common/PAYDAY 2/mods/${target_mod_name}/native/${plugin_name}.dll\\\"
+)
 

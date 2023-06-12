@@ -25,24 +25,7 @@
 // electronic mail address in the Git commit log for SuperBLT. If you prefer, you can also use
 // Steam to contact me.
 SBLT_API_EXPORT const char *MODULE_LICENCE_DECLARATION =
-// "This module is licenced under the GNU GPL version 2 or later, or another compatible licence"; // Uncomment this line
-"Please read and edit legal.cpp in your plugin file"; // Delete this line
+"This module is licenced under the GNU GPL version 2 or later, or another compatible licence";
 
-// The location a user can go to find the source code for this module. This might be
-// the web address of a source control hosting page (such as GitHub, BitBucket or GitLab),
-// or if the source code is included in the original download it may be a path to it.
-//
-// If you don't use source control and distribute the source as a tarball or something, linking
-// to it is fine too.
-//
-// NULL indicates a development version
-SBLT_API_EXPORT const char *MODULE_SOURCE_CODE_LOCATION = 0;
-
-// Normally a string to uniquely identify the source code this module was built from, such as
-// a Mercurial tag name or or Git commit hash.
-//
-// If there is a significant problem setting this due to the nature of your build system or
-// version control system, you can leave this at NULL. Filling it is greatly appreciated, though.
-// Alternatively, linking to a page with a list of hashes and versions so the user can find the version
-// of their binary works fine too.
+SBLT_API_EXPORT const char *MODULE_SOURCE_CODE_LOCATION = "https://github.com/ThuverX/pd2_shader_patcher";
 SBLT_API_EXPORT const char *MODULE_SOURCE_CODE_REVISION = 0;

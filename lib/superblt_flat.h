@@ -88,6 +88,27 @@ enum class LogType {
 // Done Including ./logging.h
 
 //////////////////////////
+// Plugin stuff
+// Including ./plugins.h
+
+#include <string>
+#include <vector>
+#include <functional>
+#include <cstdint>
+
+enum class HookMode
+{
+    REPLACER = 0,
+    PLAIN_FILE,
+    DIRECT_BUNDLE,
+};
+
+#define PD2_HOOK_ASSET_FILE(name, ext, replacer) pd2_db_hook_asset_file(name, ext, replacer, "", "", "", (int)HookMode::REPLACER)
+#define PD2_HOOK_ASSET_FILE_PLAIN(name, ext, plain_file) pd2_db_hook_asset_file(name, ext, nullptr, plain_file, "", "", (int)HookMode::PLAIN_FILE)
+#define PD2_HOOK_ASSET_FILE_DIRECT_BUNDLE(name, ext, direct_bundle_name, direct_bundle_ext) pd2_db_hook_asset_file(name, ext, nullptr, "", direct_bundle_name, direct_bundle_ext, (int)HookMode::DIRECT_BUNDLE)
+// Done Including ./plugins.h
+
+//////////////////////////
 // Platform specific stuff
 
 #if defined(WIN32)
@@ -704,9 +725,11 @@ typedef struct luaL_Buffer {
 #include <stdbool.h>
 #endif
 
+#include <vector>
+#include <functional>
+
 #ifdef INIT_FUNC
 
-#include <vector>
 class AutoFuncSetup;
 std::vector<AutoFuncSetup*> all_lua_funcs_list;
 
@@ -727,9 +750,20 @@ public:
 #endif
 
 
-IMPORT_FUNC(pd2_log, void, const char* message, int level, const char* file, int line)
 IMPORT_FUNC(is_active_state, bool, lua_State *L)
 IMPORT_FUNC(luaL_checkstack, void, lua_State *L, int sz, const char *msg)
+IMPORT_FUNC(lua_rawequal, bool, lua_State *L, int idx1, int idx2)
+
+// For blt bridge
+IMPORT_FUNC(pd2_log, void, const char* message, int level, const char* file, int line)
+IMPORT_FUNC(pd2_db_hook_asset_file, void, const char *name, const char *ext, std::function<void(std::vector<uint8_t> *)> replacer,
+            const char *plain_file, const char *direct_bundle_name, const char *direct_bundle_ext, int mode)
+IMPORT_FUNC(pd2_db_find_file, std::vector<uint8_t>, const char* name, const char* ext)
+IMPORT_FUNC(pd2_is_vr, bool)
+IMPORT_FUNC(pd2_get_mod_directory_internal, const char*, const char* path)
+IMPORT_FUNC(pd2_create_hash, unsigned long long, const char* name)
+IMPORT_FUNC(pd2_db_file_exists, bool, const char* name, const char* ext)
+
 
 CREATE_NORMAL_CALLABLE_SIGNATURE(lua_call, void, "\x8B\x44\x24\x08\x8B\x54\x24\x04\xFF\x44\x24\x0C\x8D\x0C\xC5\x00", "xxxxxxxxxxxxxxxx", 0, lua_State*, int, int)
 CREATE_NORMAL_CALLABLE_SIGNATURE(lua_pcall, int, "\x8B\x54\x24\x04\x8B\x4C\x24\x10\x53\x56\x8B\x72\x08\x8A", "xxxxxxxxxxxxxx", 0, lua_State*, int, int, int)

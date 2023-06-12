@@ -1,1 +1,1 @@
-cmake ..
+cmake .. -A Win32

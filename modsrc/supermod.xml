@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<mod>
+    <native_module platform="mswindows" loading_vector="preload" filename="native/shader_tool.dll" />
+</mod>

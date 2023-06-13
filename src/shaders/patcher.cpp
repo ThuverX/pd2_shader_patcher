@@ -156,3 +156,40 @@ bool ApplyShaderPatch(ShaderPackage* package_ptr, ShaderPatch* patch_ptr)
 
 	return false;
 }
+
+bool isPatched = false;
+std::vector<ShaderPatch> patches = std::vector<ShaderPatch>();
+
+void PatchShaderFile(std::vector<uint8_t>* file)
+{
+    // plugin init may be called multiple times, so we need to make sure we don't patch the file multiple times
+    if(isPatched || patches.size() == 0) {
+        return;
+    }
+
+    std::string msg = "Patching shader file with " + std::to_string(patches.size()) + " patches";
+
+    PD2HOOK_LOG_LOG(msg.c_str());
+
+    std::vector<unsigned char> buffer = std::vector<unsigned char>(file->begin(), file->end());
+    ShaderPackage *package_ptr = ReadShaderPackage(buffer);
+
+    std::vector<unsigned char> data = std::vector<unsigned char>((1024 * 1024 * 15));
+
+    for(ShaderPatch patch : patches) {
+        if(!ApplyShaderPatch(package_ptr, &patch)) {
+            PD2HOOK_LOG_ERROR("Failed to apply shader patch");
+        }
+    }
+
+    WriteShaderPackage(data, package_ptr);
+
+    file->clear();
+    file->insert(file->end(), data.begin(), data.end());
+
+    isPatched = true;
+
+    msg = "Shader file patched with " + std::to_string(patches.size()) + " patches";
+
+    PD2HOOK_LOG_LOG(msg.c_str());
+}

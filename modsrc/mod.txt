@@ -1,0 +1,8 @@
+{
+	"name": "Cinematic Menu",
+	"description": "A cinematic menu for Payday 2",
+	"author": "ThuverX",
+	"contact": "https://discord.gg/QH8U8m9",
+	"version": "1",
+	"priority": 0
+}

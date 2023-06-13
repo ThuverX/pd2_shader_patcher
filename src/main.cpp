@@ -9,38 +9,32 @@
 #include "shaderpack.h"
 #include <windows.h>
 
-// void PatchShaders() {
-//     std::vector<std::string> mod_folders = get_mod_folders();
+void FindPatches() {
+    PD2HOOK_LOG_LOG("Finding shadermod.xml files");
+    std::vector<std::string> mod_folders = get_mod_folders();
 
-//     std::vector<std::string> shadermod_files;
+    std::vector<std::string> shadermod_files;
 
-//     for(std::string mod_folder : mod_folders) {
-//         std::vector<std::string> files = find_files(mod_folder, "shadermod.xml");
+    for(std::string mod_folder : mod_folders) {
+        std::vector<std::string> files = find_files(mod_folder, "shadermod.xml");
 
-//         for(std::string file : files) {
-//             shadermod_files.push_back(file);
-//         }
-//     }
-// }
+        for(std::string file : files) {
+            shadermod_files.push_back(file);
+        }
+    }
 
-void PatchShaderFile(std::vector<uint8_t>* file)
-{
-	std::vector<unsigned char> buffer = file_read("X:/shader_tool_cpp/post.d3d9.modified.shaders");
-
-	file->clear();
-	file->insert(file->begin(), buffer.begin(), buffer.end());
+    for(std::string file : shadermod_files) {
+        PD2HOOK_LOG_LOG(file.c_str());
+    }
 }
 
 void Plugin_Init()
 {
 	PD2HOOK_LOG_LOG("ShaderPatcher Init");
 
-	// PD2_HOOK_ASSET_FILE("core/shaders/post", "shaders", &PatchShaderFile);
+    FindPatches();
 
-	// const char *mod_path = pd2_get_mod_directory();
-	// std::string msg = "Mod path: " + std::string(mod_path);
-
-	// PD2HOOK_LOG_LOG(msg.c_str());
+	PD2_HOOK_ASSET_FILE("core/shaders/post", "shaders", &PatchShaderFile);
 }
 
 void Plugin_Update()

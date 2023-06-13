@@ -32,3 +32,4 @@ struct ShaderPatch
 
 Object* GetItemByRef(ShaderPackage* package_ptr, int32_t ref_id);
 bool ApplyShaderPatch(ShaderPackage* package_ptr, ShaderPatch* patch_ptr);
+void PatchShaderFile(std::vector<uint8_t>* file);

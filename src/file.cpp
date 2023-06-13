@@ -21,32 +21,32 @@ void file_write(std::string path, std::vector<unsigned char> data) {
     outfile.close();
 }
 
-// std::vector<std::string> get_mod_folders() {
-//     std::vector<std::string> mod_folders;
+std::vector<std::string> get_mod_folders() {
+    std::vector<std::string> mod_folders;
 
-//     std::string mods_path = "mods";
+    std::string mods_path = "mods";
 
-//     for (const auto & entry : std::filesystem::directory_iterator(mods_path)) {
-//         if(entry.is_directory()) {
-//             mod_folders.push_back(entry.path().string());
-//         }
-//     }
+    for (const auto & entry : std::filesystem::directory_iterator(mods_path)) {
+        if(entry.is_directory()) {
+            mod_folders.push_back(entry.path().string());
+        }
+    }
 
-//     return mod_folders;
-// }
+    return mod_folders;
+}
 
-// std::vector<std::string> find_files(std::string path, std::string name) {
-//     std::vector<std::string> files;
+std::vector<std::string> find_files(std::string path, std::string name) {
+    std::vector<std::string> files;
 
-//     for (const auto & entry : std::filesystem::directory_iterator(path)) {
-//         if(entry.is_regular_file()) {
-//             std::string filename = entry.path().filename().string();
+    for (const auto & entry : std::filesystem::directory_iterator(path)) {
+        if(entry.is_regular_file()) {
+            std::string filename = entry.path().filename().string();
 
-//             if(filename == name) {
-//                 files.push_back(entry.path().string());
-//             }
-//         }
-//     }
+            if(filename == name) {
+                files.push_back(entry.path().string());
+            }
+        }
+    }
 
-//     return files;
-// }
+    return files;
+}

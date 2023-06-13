@@ -5,8 +5,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include <vector>
 
+#include <filesystem>
+#include <superblt_flat.h>
 
 std::vector<unsigned char> file_read(std::string path);
 void file_write(std::string path, std::vector<unsigned char> data);

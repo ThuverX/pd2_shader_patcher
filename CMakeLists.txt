@@ -18,7 +18,7 @@ set(mxml_sources mxml-attr.c mxml-entity.c mxml-file.c mxml-get.c mxml-index.c
 	mxml-node.c mxml-search.c mxml-set.c mxml-private.c mxml-string.c)
 list(TRANSFORM mxml_sources PREPEND lib/mxml/)
 add_library(mxml STATIC ${mxml_sources})
-target_include_directories(mxml PRIVATE lib/configs/mxml)
+target_include_directories(mxml PRIVATE lib/configs)
 if(UNIX)
 	target_compile_options(mxml PRIVATE -std=gnu99 -Wall -fPIC)
 elseif(WIN32)

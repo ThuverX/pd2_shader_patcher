@@ -3,43 +3,51 @@
 #include <functional>
 #include <iostream>
 #include <superblt_flat.h>
+#include <windows.h>
 
 #include "file.h"
 #include "patcher.h"
 #include "shaderpack.h"
-#include <windows.h>
+#include "xml.h"
 
-void FindPatches() {
-    PD2HOOK_LOG_LOG("Finding shadermod.xml files");
-    std::vector<std::string> mod_folders = get_mod_folders();
+void FindPatches()
+{
+	PD2HOOK_LOG_LOG("Finding shadermod.xml files");
+	std::vector<std::string> mod_folders = get_mod_folders();
 
-    std::vector<std::string> shadermod_files;
+	std::vector<std::string> shadermod_files;
 
-    for(std::string mod_folder : mod_folders) {
-        std::vector<std::string> files = find_files(mod_folder, "shadermod.xml");
+	for (std::string mod_folder : mod_folders)
+	{
+		std::vector<std::string> files = find_files(mod_folder, "shadermod.xml");
 
-        for(std::string file : files) {
-            shadermod_files.push_back(file);
-        }
-    }
+		for (std::string file : files)
+		{
+			shadermod_files.push_back(file);
+		}
+	}
 
-    for(std::string file : shadermod_files) {
-        PD2HOOK_LOG_LOG(file.c_str());
-    }
+	for (std::string file : shadermod_files)
+	{
+		std::vector<ShaderPatch*> patches = getPatchesFromXML(file);
+
+		for (ShaderPatch* patch : patches)
+		{
+			addShaderPatch(patch);
+		}
+	}
 }
 
 void Plugin_Init()
 {
 	PD2HOOK_LOG_LOG("ShaderPatcher Init");
 
-    FindPatches();
-
-	PD2_HOOK_ASSET_FILE("core/shaders/post", "shaders", &PatchShaderFile);
+	FindPatches();
+    ApplyShaderHooks();
 }
 
 void Plugin_Update()
 {
-    
 }
 
 void Plugin_Setup_Lua(lua_State* L)

@@ -4,249 +4,126 @@
 #include "file.h"
 #include <filesystem>
 
+std::map<const char*, int> D3DSAMPLERSTATETYPE = {
+	{"D3DSAMP_ADDRESSU", 1},       {"D3DSAMP_ADDRESSV", 2},      {"D3DSAMP_ADDRESSW", 3},
+	{"D3DSAMP_BORDERCOLOR", 4},    {"D3DSAMP_MAGFILTER", 5},     {"D3DSAMP_MINFILTER", 6},
+	{"D3DSAMP_MIPFILTER", 7},      {"D3DSAMP_MIPMAPLODBIAS", 8}, {"D3DSAMP_MAXMIPLEVEL", 9},
+	{"D3DSAMP_MAXANISOTROPY", 10}, {"D3DSAMP_SRGBTEXTURE", 11},  {"D3DSAMP_ELEMENTINDEX", 12},
+	{"D3DSAMP_DMAPOFFSET", 13}};
 
-int sampler_state_from_string(std::string name)
+std::map<const char*, int> D3DRENDERSTATETYPE = {{"D3DRS_ZENABLE", 7},
+                                                 {"D3DRS_FILLMODE", 8},
+                                                 {"D3DRS_SHADEMODE", 9},
+                                                 {"D3DRS_ZWRITEENABLE", 14},
+                                                 {"D3DRS_ALPHATESTENABLE", 15},
+                                                 {"D3DRS_LASTPIXEL", 16},
+                                                 {"D3DRS_SRCBLEND", 19},
+                                                 {"D3DRS_DESTBLEND", 20},
+                                                 {"D3DRS_CULLMODE", 22},
+                                                 {"D3DRS_ZFUNC", 23},
+                                                 {"D3DRS_ALPHAREF", 24},
+                                                 {"D3DRS_ALPHAFUNC", 25},
+                                                 {"D3DRS_DITHERENABLE", 26},
+                                                 {"D3DRS_ALPHABLENDENABLE", 27},
+                                                 {"D3DRS_FOGENABLE", 28},
+                                                 {"D3DRS_SPECULARENABLE", 29},
+                                                 {"D3DRS_FOGCOLOR", 34},
+                                                 {"D3DRS_FOGTABLEMODE", 35},
+                                                 {"D3DRS_FOGSTART", 36},
+                                                 {"D3DRS_FOGEND", 37},
+                                                 {"D3DRS_FOGDENSITY", 38},
+                                                 {"D3DRS_RANGEFOGENABLE", 48},
+                                                 {"D3DRS_STENCILENABLE", 52},
+                                                 {"D3DRS_STENCILFAIL", 53},
+                                                 {"D3DRS_STENCILZFAIL", 54},
+                                                 {"D3DRS_STENCILPASS", 55},
+                                                 {"D3DRS_STENCILFUNC", 56},
+                                                 {"D3DRS_STENCILREF", 57},
+                                                 {"D3DRS_STENCILMASK", 58},
+                                                 {"D3DRS_STENCILWRITEMASK", 59},
+                                                 {"D3DRS_TEXTUREFACTOR", 60},
+                                                 {"D3DRS_WRAP0", 128},
+                                                 {"D3DRS_WRAP1", 129},
+                                                 {"D3DRS_WRAP2", 130},
+                                                 {"D3DRS_WRAP3", 131},
+                                                 {"D3DRS_WRAP4", 132},
+                                                 {"D3DRS_WRAP5", 133},
+                                                 {"D3DRS_WRAP6", 134},
+                                                 {"D3DRS_WRAP7", 135},
+                                                 {"D3DRS_CLIPPING", 136},
+                                                 {"D3DRS_LIGHTING", 137},
+                                                 {"D3DRS_AMBIENT", 139},
+                                                 {"D3DRS_FOGVERTEXMODE", 140},
+                                                 {"D3DRS_COLORVERTEX", 141},
+                                                 {"D3DRS_LOCALVIEWER", 142},
+                                                 {"D3DRS_NORMALIZENORMALS", 143},
+                                                 {"D3DRS_DIFFUSEMATERIALSOURCE", 145},
+                                                 {"D3DRS_SPECULARMATERIALSOURCE", 146},
+                                                 {"D3DRS_AMBIENTMATERIALSOURCE", 147},
+                                                 {"D3DRS_EMISSIVEMATERIALSOURCE", 148},
+                                                 {"D3DRS_VERTEXBLEND", 151},
+                                                 {"D3DRS_CLIPPLANEENABLE", 152},
+                                                 {"D3DRS_POINTSIZE", 154},
+                                                 {"D3DRS_POINTSIZE_MIN", 155},
+                                                 {"D3DRS_POINTSPRITEENABLE", 156},
+                                                 {"D3DRS_POINTSCALEENABLE", 157},
+                                                 {"D3DRS_POINTSCALE_A", 158},
+                                                 {"D3DRS_POINTSCALE_B", 159},
+                                                 {"D3DRS_POINTSCALE_C", 160},
+                                                 {"D3DRS_MULTISAMPLEANTIALIAS", 161},
+                                                 {"D3DRS_MULTISAMPLEMASK", 162},
+                                                 {"D3DRS_PATCHEDGESTYLE", 163},
+                                                 {"D3DRS_DEBUGMONITORTOKEN", 165},
+                                                 {"D3DRS_POINTSIZE_MAX", 166},
+                                                 {"D3DRS_INDEXEDVERTEXBLENDENABLE", 167},
+                                                 {"D3DRS_COLORWRITEENABLE", 168},
+                                                 {"D3DRS_TWEENFACTOR", 170},
+                                                 {"D3DRS_BLENDOP", 171},
+                                                 {"D3DRS_POSITIONDEGREE", 172},
+                                                 {"D3DRS_NORMALDEGREE", 173},
+                                                 {"D3DRS_SCISSORTESTENABLE", 174},
+                                                 {"D3DRS_SLOPESCALEDEPTHBIAS", 175},
+                                                 {"D3DRS_ANTIALIASEDLINEENABLE", 176},
+                                                 {"D3DRS_MINTESSELLATIONLEVEL", 178},
+                                                 {"D3DRS_MAXTESSELLATIONLEVEL", 179},
+                                                 {"D3DRS_ADAPTIVETESS_X", 180},
+                                                 {"D3DRS_ADAPTIVETESS_Y", 181},
+                                                 {"D3DRS_ADAPTIVETESS_Z", 182},
+                                                 {"D3DRS_ADAPTIVETESS_W", 183},
+                                                 {"D3DRS_ENABLEADAPTIVETESSELLATION", 184},
+                                                 {"D3DRS_TWOSIDEDSTENCILMODE", 185},
+                                                 {"D3DRS_CCW_STENCILFAIL", 186},
+                                                 {"D3DRS_CCW_STENCILZFAIL", 187},
+                                                 {"D3DRS_CCW_STENCILPASS", 188},
+                                                 {"D3DRS_CCW_STENCILFUNC", 189},
+                                                 {"D3DRS_COLORWRITEENABLE1", 190},
+                                                 {"D3DRS_COLORWRITEENABLE2", 191},
+                                                 {"D3DRS_COLORWRITEENABLE3", 192},
+                                                 {"D3DRS_BLENDFACTOR", 193},
+                                                 {"D3DRS_SRGBWRITEENABLE", 194},
+                                                 {"D3DRS_DEPTHBIAS", 195},
+                                                 {"D3DRS_WRAP8", 198},
+                                                 {"D3DRS_WRAP9", 199},
+                                                 {"D3DRS_WRAP10", 200},
+                                                 {"D3DRS_WRAP11", 201},
+                                                 {"D3DRS_WRAP12", 202},
+                                                 {"D3DRS_WRAP13", 203},
+                                                 {"D3DRS_WRAP14", 204},
+                                                 {"D3DRS_WRAP15", 205},
+                                                 {"D3DRS_SEPARATEALPHABLENDENABLE", 206},
+                                                 {"D3DRS_SRCBLENDALPHA", 207},
+                                                 {"D3DRS_DESTBLENDALPHA", 208},
+                                                 {"D3DRS_BLENDOPALPHA", 209}};
+
+int is_in_map(std::map<const char*, int> map, const char* name)
 {
-	if (name == "D3DSAMP_ADDRESSU")
-		return 1;
-	if (name == "D3DSAMP_ADDRESSV")
-		return 2;
-	if (name == "D3DSAMP_ADDRESSW")
-		return 3;
-	if (name == "D3DSAMP_BORDERCOLOR")
-		return 4;
-	if (name == "D3DSAMP_MAGFILTER")
-		return 5;
-	if (name == "D3DSAMP_MINFILTER")
-		return 6;
-	if (name == "D3DSAMP_MIPFILTER")
-		return 7;
-	if (name == "D3DSAMP_MIPMAPLODBIAS")
-		return 8;
-	if (name == "D3DSAMP_MAXMIPLEVEL")
-		return 9;
-	if (name == "D3DSAMP_MAXANISOTROPY")
-		return 10;
-	if (name == "D3DSAMP_SRGBTEXTURE")
-		return 11;
-	if (name == "D3DSAMP_ELEMENTINDEX")
-		return 12;
-	if (name == "D3DSAMP_DMAPOFFSET")
-		return 13;
+    auto it = map.find(name);
 
-    return -1;
-}
+    if(it != map.end()) {
+        return it->second;
+    }
 
-int render_state_from_string(std::string name)
-{
-	if (name == "D3DRS_ZENABLE")
-		return 7;
-	if (name == "D3DRS_FILLMODE")
-		return 8;
-	if (name == "D3DRS_SHADEMODE")
-		return 9;
-	if (name == "D3DRS_ZWRITEENABLE")
-		return 14;
-	if (name == "D3DRS_ALPHATESTENABLE")
-		return 15;
-	if (name == "D3DRS_LASTPIXEL")
-		return 16;
-	if (name == "D3DRS_SRCBLEND")
-		return 19;
-	if (name == "D3DRS_DESTBLEND")
-		return 20;
-	if (name == "D3DRS_CULLMODE")
-		return 22;
-	if (name == "D3DRS_ZFUNC")
-		return 23;
-	if (name == "D3DRS_ALPHAREF")
-		return 24;
-	if (name == "D3DRS_ALPHAFUNC")
-		return 25;
-	if (name == "D3DRS_DITHERENABLE")
-		return 26;
-	if (name == "D3DRS_ALPHABLENDENABLE")
-		return 27;
-	if (name == "D3DRS_FOGENABLE")
-		return 28;
-	if (name == "D3DRS_SPECULARENABLE")
-		return 29;
-	if (name == "D3DRS_FOGCOLOR")
-		return 34;
-	if (name == "D3DRS_FOGTABLEMODE")
-		return 35;
-	if (name == "D3DRS_FOGSTART")
-		return 36;
-	if (name == "D3DRS_FOGEND")
-		return 37;
-	if (name == "D3DRS_FOGDENSITY")
-		return 38;
-	if (name == "D3DRS_RANGEFOGENABLE")
-		return 48;
-	if (name == "D3DRS_STENCILENABLE")
-		return 52;
-	if (name == "D3DRS_STENCILFAIL")
-		return 53;
-	if (name == "D3DRS_STENCILZFAIL")
-		return 54;
-	if (name == "D3DRS_STENCILPASS")
-		return 55;
-	if (name == "D3DRS_STENCILFUNC")
-		return 56;
-	if (name == "D3DRS_STENCILREF")
-		return 57;
-	if (name == "D3DRS_STENCILMASK")
-		return 58;
-	if (name == "D3DRS_STENCILWRITEMASK")
-		return 59;
-	if (name == "D3DRS_TEXTUREFACTOR")
-		return 60;
-	if (name == "D3DRS_WRAP0")
-		return 128;
-	if (name == "D3DRS_WRAP1")
-		return 129;
-	if (name == "D3DRS_WRAP2")
-		return 130;
-	if (name == "D3DRS_WRAP3")
-		return 131;
-	if (name == "D3DRS_WRAP4")
-		return 132;
-	if (name == "D3DRS_WRAP5")
-		return 133;
-	if (name == "D3DRS_WRAP6")
-		return 134;
-	if (name == "D3DRS_WRAP7")
-		return 135;
-	if (name == "D3DRS_CLIPPING")
-		return 136;
-	if (name == "D3DRS_LIGHTING")
-		return 137;
-	if (name == "D3DRS_AMBIENT")
-		return 139;
-	if (name == "D3DRS_FOGVERTEXMODE")
-		return 140;
-	if (name == "D3DRS_COLORVERTEX")
-		return 141;
-	if (name == "D3DRS_LOCALVIEWER")
-		return 142;
-	if (name == "D3DRS_NORMALIZENORMALS")
-		return 143;
-	if (name == "D3DRS_DIFFUSEMATERIALSOURCE")
-		return 145;
-	if (name == "D3DRS_SPECULARMATERIALSOURCE")
-		return 146;
-	if (name == "D3DRS_AMBIENTMATERIALSOURCE")
-		return 147;
-	if (name == "D3DRS_EMISSIVEMATERIALSOURCE")
-		return 148;
-	if (name == "D3DRS_VERTEXBLEND")
-		return 151;
-	if (name == "D3DRS_CLIPPLANEENABLE")
-		return 152;
-	if (name == "D3DRS_POINTSIZE")
-		return 154;
-	if (name == "D3DRS_POINTSIZE_MIN")
-		return 155;
-	if (name == "D3DRS_POINTSPRITEENABLE")
-		return 156;
-	if (name == "D3DRS_POINTSCALEENABLE")
-		return 157;
-	if (name == "D3DRS_POINTSCALE_A")
-		return 158;
-	if (name == "D3DRS_POINTSCALE_B")
-		return 159;
-	if (name == "D3DRS_POINTSCALE_C")
-		return 160;
-	if (name == "D3DRS_MULTISAMPLEANTIALIAS")
-		return 161;
-	if (name == "D3DRS_MULTISAMPLEMASK")
-		return 162;
-	if (name == "D3DRS_PATCHEDGESTYLE")
-		return 163;
-	if (name == "D3DRS_DEBUGMONITORTOKEN")
-		return 165;
-	if (name == "D3DRS_POINTSIZE_MAX")
-		return 166;
-	if (name == "D3DRS_INDEXEDVERTEXBLENDENABLE")
-		return 167;
-	if (name == "D3DRS_COLORWRITEENABLE")
-		return 168;
-	if (name == "D3DRS_TWEENFACTOR")
-		return 170;
-	if (name == "D3DRS_BLENDOP")
-		return 171;
-	if (name == "D3DRS_POSITIONDEGREE")
-		return 172;
-	if (name == "D3DRS_NORMALDEGREE")
-		return 173;
-	if (name == "D3DRS_SCISSORTESTENABLE")
-		return 174;
-	if (name == "D3DRS_SLOPESCALEDEPTHBIAS")
-		return 175;
-	if (name == "D3DRS_ANTIALIASEDLINEENABLE")
-		return 176;
-	if (name == "D3DRS_MINTESSELLATIONLEVEL")
-		return 178;
-	if (name == "D3DRS_MAXTESSELLATIONLEVEL")
-		return 179;
-	if (name == "D3DRS_ADAPTIVETESS_X")
-		return 180;
-	if (name == "D3DRS_ADAPTIVETESS_Y")
-		return 181;
-	if (name == "D3DRS_ADAPTIVETESS_Z")
-		return 182;
-	if (name == "D3DRS_ADAPTIVETESS_W")
-		return 183;
-	if (name == "D3DRS_ENABLEADAPTIVETESSELLATION")
-		return 184;
-	if (name == "D3DRS_TWOSIDEDSTENCILMODE")
-		return 185;
-	if (name == "D3DRS_CCW_STENCILFAIL")
-		return 186;
-	if (name == "D3DRS_CCW_STENCILZFAIL")
-		return 187;
-	if (name == "D3DRS_CCW_STENCILPASS")
-		return 188;
-	if (name == "D3DRS_CCW_STENCILFUNC")
-		return 189;
-	if (name == "D3DRS_COLORWRITEENABLE1")
-		return 190;
-	if (name == "D3DRS_COLORWRITEENABLE2")
-		return 191;
-	if (name == "D3DRS_COLORWRITEENABLE3")
-		return 192;
-	if (name == "D3DRS_BLENDFACTOR")
-		return 193;
-	if (name == "D3DRS_SRGBWRITEENABLE")
-		return 194;
-	if (name == "D3DRS_DEPTHBIAS")
-		return 195;
-	if (name == "D3DRS_WRAP8")
-		return 198;
-	if (name == "D3DRS_WRAP9")
-		return 199;
-	if (name == "D3DRS_WRAP10")
-		return 200;
-	if (name == "D3DRS_WRAP11")
-		return 201;
-	if (name == "D3DRS_WRAP12")
-		return 202;
-	if (name == "D3DRS_WRAP13")
-		return 203;
-	if (name == "D3DRS_WRAP14")
-		return 204;
-	if (name == "D3DRS_WRAP15")
-		return 205;
-	if (name == "D3DRS_SEPARATEALPHABLENDENABLE")
-		return 206;
-	if (name == "D3DRS_SRCBLENDALPHA")
-		return 207;
-	if (name == "D3DRS_DESTBLENDALPHA")
-		return 208;
-	if (name == "D3DRS_BLENDOPALPHA")
-		return 209;
-
-    return -1;
+    return 0;
 }
 
 static void handle_mxml_error_crash(const char* error)
@@ -277,21 +154,31 @@ ShaderPassSamplerPatch* getPatchSamplerFromXML(mxml_node_t* samplerNode)
 		const char* id = mxmlElementGetAttr(varNode, "id");
 		const char* value = mxmlElementGetAttr(varNode, "value");
 
-        int id_int = sampler_state_from_string(std::string(id));
+        if(!id) {
+            PD2HOOK_LOG_ERROR("[XML] Sampler var missing id!");
+            continue;
+        }
+
+        int id_int = 0;
 
         try {
             id_int = std::stoi(id);
-        } catch (std::invalid_argument) {
-            id_int = -1;
+        } catch(...) {
+            id_int = is_in_map(D3DSAMPLERSTATETYPE, id);
         }
 
-		if (id_int == -1 || !value)
+        if(!id_int) {
+            PD2HOOK_LOG_ERROR("[XML] Sampler var invalid id!");
+            continue;
+        }
+
+		if (!value)
 		{
-			PD2HOOK_LOG_ERROR("[XML] Sampler var missing id or value!");
+			PD2HOOK_LOG_ERROR("[XML] Sampler var missing value!");
 			continue;
 		}
 
-		patch->vars[std::stoi(id)] = std::stoi(value);
+		patch->vars[id_int] = std::stoi(value);
 	}
 
 	return patch;
@@ -334,21 +221,32 @@ ShaderPassPatch* getPatchPassFromXML(mxml_node_t* passNode, std::string xmlPath)
 			const char* id = mxmlElementGetAttr(varNode, "id");
 			const char* value = mxmlElementGetAttr(varNode, "value");
 
-            int id_int = render_state_from_string(std::string(id));
+            if(!id) {
+                PD2HOOK_LOG_ERROR("[XML] Render state var missing id!");
+                continue;
+            }
+
+            int id_int = 0;
 
             try {
                 id_int = std::stoi(id);
-            } catch (std::invalid_argument) {
-                id_int = -1;
+            } catch(...) {
+                // TODO: Figure out why this isn't working
+                id_int = is_in_map(D3DRENDERSTATETYPE, id);
             }
 
-			if (id_int == -1 || !value)
+            if(!id_int) {
+                PD2HOOK_LOG_ERROR("[XML] Render state var invalid id!");
+                continue;
+            }
+
+			if (!value)
 			{
-				PD2HOOK_LOG_ERROR("[XML] Render state var missing id or value!");
+				PD2HOOK_LOG_ERROR("[XML] Render state var missing value!");
 				continue;
 			}
 
-			patch->render_states[std::stoi(id)] = std::stoi(value);
+			patch->render_states[id_int] = std::stoi(value);
 		}
 	}
 

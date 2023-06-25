@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <patches>
-    <patch apply_to="core/shaders/post" name="post_DOF:default" mode="replace">
+    <patch apply_to="core/shaders/post" name="custom_DOF:default" mode="append">
         <passes name="ambient">
             <pass>
                 <samplers>
@@ -13,36 +13,8 @@
                         <var id="6" value="2" />
                         <var id="7" value="2" />
                     </sampler>
-                    <sampler id="1">
-                        <var id="8" value="827606343" />
-                        <var id="11" value="0" />
-                        <var id="1" value="3" />
-                        <var id="2" value="3" />
-                        <var id="5" value="2" />
-                        <var id="6" value="2" />
-                        <var id="7" value="2" />
-                    </sampler>
-                    <sampler id="2">
-                        <var id="8" value="827606343" />
-                        <var id="11" value="0" />
-                        <var id="1" value="3" />
-                        <var id="2" value="3" />
-                        <var id="5" value="2" />
-                        <var id="6" value="2" />
-                        <var id="7" value="2" />
-                    </sampler>
-                    <sampler id="3">
-                        <var id="8" value="827606343" />
-                        <var id="11" value="0" />
-                        <var id="1" value="3" />
-                        <var id="2" value="3" />
-                        <var id="5" value="2" />
-                        <var id="6" value="2" />
-                        <var id="7" value="2" />
-                    </sampler>
                 </samplers>
                 <render_states>
-                    <!-- TODO: add support for names instead of id's -->
                     <var id="7" value="0" />	
                     <var id="23" value="4" />
                     <var id="14" value="0" />
@@ -70,9 +42,8 @@
                     <var id="206" value="0" />
                     <var id="15" value="0" />
                 </render_states>
-                <!-- TODO: add support for compiling shaders on the fly -->
-                <pixel_shader path="shaders/post_dof.pixel.o" />
-                <vertex_shader path="shaders/post_dof.vertex.o" />
+                <pixel_shader entry="Main" path="shaders/custom_dof.pixel.hlsl" />
+                <vertex_shader entry="Main" path="shaders/custom_dof.vertex.hlsl" />
             </pass>
         </passes>
     </patch>

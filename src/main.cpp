@@ -38,16 +38,43 @@ void FindPatches()
 	}
 }
 
+void Test() {
+    unsigned long long shaderids = create_hash("shaders");
+
+    bool exists = db_file_exists(create_hash("core/shaders/post"), shaderids);
+
+    std::cout << "exist:" << exists << std::endl;
+
+    FileData d = db_read_file(create_hash("core/shaders/post"), shaderids);
+
+    std::cout << d.size << std::endl;
+
+    std::cout << "Free" << std::endl;
+    db_free_file(d);
+    std::cout << "done" << std::endl;
+
+    bool vr = is_vr();
+
+    std::cout << "vr:" << vr << std::endl;
+
+    unsigned long long hash = create_hash("test");
+
+    std::cout << "Hash:" << std::hex << hash << std::endl;
+}
+
 void Plugin_Init()
 {
 	PD2HOOK_LOG_LOG("ShaderPatcher Init");
 
+    // Test();
 	FindPatches();
+	PD2HOOK_LOG_LOG("Applying shader hooks");
     ApplyShaderHooks();
 }
 
 void Plugin_Update()
 {
+
 }
 
 void Plugin_Setup_Lua(lua_State* L)

@@ -9,12 +9,21 @@ struct ShaderPassSamplerPatch
 	std::map<int32_t, int32_t> vars;
 };
 
+const int32_t SHADER_PATCH_TYPE_CODE = 0;
+const int32_t SHADER_PATCH_TYPE_PRECOMPILED = 1;
+
+struct ShaderPassShaderPatch {
+    std::string path;
+    std::string entry_point;
+    int32_t type = 0; // code = 0, precompiled = 1
+};
+
 struct ShaderPassPatch
 {
 	std::map<int32_t, int32_t> render_states;
 	std::vector<ShaderPassSamplerPatch*> samplers;
-	std::vector<unsigned char> vertex_shader;
-	std::vector<unsigned char> pixel_shader;
+	ShaderPassShaderPatch* vertex_shader;
+	ShaderPassShaderPatch* pixel_shader;
 };
 
 const int32_t SHADER_PATCH_MODE_REPLACE = 0;
@@ -32,6 +41,5 @@ struct ShaderPatch
 
 Object* GetItemByRef(ShaderPackage* package_ptr, int32_t ref_id);
 bool ApplyShaderPatch(ShaderPackage* package_ptr, ShaderPatch* patch_ptr);
-void PatchShaderFile(std::vector<uint8_t>* file);
 void addShaderPatch(ShaderPatch* patch);
 void ApplyShaderHooks();

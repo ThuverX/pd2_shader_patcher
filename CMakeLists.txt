@@ -37,6 +37,7 @@ target_include_directories(${plugin_name} PUBLIC include)
 # TODO add GitLab URL
 target_include_directories(${plugin_name} PUBLIC lib)
 target_link_libraries(${plugin_name} sblt_plugin)
+target_link_libraries(${plugin_name} d3dcompiler)
 target_link_libraries(${plugin_name} mxml)
 
 # For development purposes, you may find this helpful

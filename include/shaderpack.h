@@ -36,7 +36,7 @@ struct StateVar
 
 struct SamplerState
 {
-	int32_t id;
+	int32_t id = 0;
 	std::vector<StateVar*> vars = std::vector<StateVar*>();
 };
 

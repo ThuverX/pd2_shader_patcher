@@ -1,5 +1,7 @@
 #include "file.h"
 
+#include "superblt_flat.h"
+
 std::vector<unsigned char> file_read(std::string path)
 {
 	std::ifstream file(path, std::ios::binary);
@@ -23,6 +25,11 @@ void file_write(std::string path, std::vector<unsigned char> data)
 	outfile.write((char*)data.data(), data.size());
 
 	outfile.close();
+}
+
+bool file_exists(std::string path)
+{
+    return std::filesystem::exists(path);
 }
 
 std::vector<std::string> get_mod_folders()
@@ -60,4 +67,10 @@ std::vector<std::string> find_files(std::string path, std::string name)
 	}
 
 	return files;
+}
+
+int64_t get_file_hash(std::string path) {
+    std::vector<unsigned char> data = file_read(path);
+
+    return create_hash((char*) data.data());
 }
